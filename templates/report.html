@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }}님의 유전자 분석 보고서</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='report_styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="report-container">
+        <header>
+            <h1>유전자 분석 보고서</h1>
+            <p class="sub-title">{{ name }}님의 피부 건강 분석</p>
+            <div class="button-group">
+                <button class="print-btn" onclick="printReport()">
+                    <i class="fas fa-print"></i> 인쇄
+                </button>
+                <button class="pdf-btn" onclick="downloadPDF()">
+                    <i class="fas fa-file-pdf"></i> PDF 다운로드
+                </button>
+                <a href="{{ url_for('main.list_reports') }}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> 목록으로
+                </a>
+            </div>
+        </header>
+
+        <section class="personal-info">
+            <h2><i class="fas fa-user"></i> 개인 정보</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">이름</span>
+                    <span class="value">{{ name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">생년월일</span>
+                    <span class="value">{{ birth_date }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">검사 일자</span>
+                    <span class="value">{{ test_date }}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="gene-data">
+            <h2><i class="fas fa-dna"></i> 유전자 발현량 데이터</h2>
+            <table class="gene-table">
+                <thead>
+                    <tr>
+                        {% for header in gene_data_table[0] %}
+                            <th data-sort="{{ loop.index0 }}" onclick="sortTable(this.getAttribute('data-sort'))">
+                                {{ header }} <i class="fas fa-sort"></i>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in gene_data_table[1:] %}
+                        <tr>
+                            <td>{{ row[0] }}</td> <!-- 유전자 -->
+                            <td>{{ row[1] }}</td> <!-- 발현량 -->
+                            <td class="status {{ 'good' if row[2] == '+' else 'low' }}">{{ row[2] }}</td> <!-- 전체 평균 비교 -->
+                            <td class="status {{ 'good' if row[3] == '양호' else 'low' }}">{{ row[3] }}</td> <!-- 평가 -->
+                            <td class="status {{ 'good' if row[4] == '+' else 'low' }}">{{ row[4] }}</td> <!-- 연령대 평균 비교 -->
+                            <td class="status {{ 'good' if row[5] == '양호' else 'low' }}">{{ row[5] }}</td> <!-- 평가 -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="charts">
+            <h2><i class="fas fa-chart-bar"></i> 차트 분석</h2>
+            <div class="chart-container">
+                <div class="chart-card" onclick="openModal('radar')">
+                    <h3>레이더 차트</h3>
+                    <img src="{{ url_for('static', filename='Charts/user_charts/' + name + '/' + radar_chart) }}" alt="레이더 차트">
+                </div>
+                <div class="chart-card" onclick="openModal('bar')">
+                    <h3>막대 차트</h3>
+                    <img src="{{ url_for('static', filename='Charts/user_charts/' + name + '/' + bar_chart) }}" alt="막대 차트">
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Skin GeneCurator Co., Ltd.</p>
+            <p>문의: support@skingene.com | 02-1234-5678</p>
+        </footer>
+    </div>
+
+    <!-- 모달 -->
+    <div id="chart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <img id="modal-image" src="" alt="차트 확대">
+        </div>
+    </div>
+
+    <script>
+        function printReport() {
+            window.print();
+        }
+
+        function downloadPDF() {
+            const element = document.querySelector('.report-container');
+            const opt = {
+                margin: 1,
+                filename: '{{ name }}_유전자_분석_보고서.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        let sortDirection = [1, 1, 1, 1, 1, 1]; // 각 열에 대한 정렬 방향
+        function sortTable(column) {
+            column = parseInt(column); // 문자열을 정수로 변환
+            const tbody = document.querySelector('.gene-table tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const isNumeric = column === 1; // 발현량만 숫자 정렬
+
+            rows.sort((a, b) => {
+                const aValue = isNumeric ? parseFloat(a.cells[column].textContent) : a.cells[column].textContent;
+                const bValue = isNumeric ? parseFloat(b.cells[column].textContent) : b.cells[column].textContent;
+                return (aValue > bValue ? 1 : -1) * sortDirection[column];
+            });
+
+            sortDirection[column] *= -1;
+            rows.forEach(row => tbody.appendChild(row));
+
+            const headers = document.querySelectorAll('.gene-table th');
+            headers.forEach((th, idx) => {
+                const icon = th.querySelector('i');
+                icon.className = 'fas fa-sort' + (idx === column ? (sortDirection[column] === 1 ? '-up' : '-down') : '');
+            });
+        }
+
+        function openModal(type) {
+            const modal = document.getElementById('chart-modal');
+            const modalImg = document.getElementById('modal-image');
+            const src = type === 'radar' ? 
+                '{{ url_for("static", filename="Charts/user_charts/" + name + "/" + radar_chart) }}' : 
+                '{{ url_for("static", filename="Charts/user_charts/" + name + "/" + bar_chart) }}';
+            modalImg.src = src;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('chart-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

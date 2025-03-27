@@ -1,0 +1,264 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #F7FAFC;
+    color: #2D3748;
+}
+
+.report-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+h1 {
+    color: #2B6CB0;
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.sub-title {
+    color: #718096;
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+button, .back-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.print-btn {
+    background: #38A169;
+    color: white;
+}
+
+.print-btn:hover {
+    background: #2F855A;
+}
+
+.pdf-btn {
+    background: #E53E3E;
+    color: white;
+}
+
+.pdf-btn:hover {
+    background: #C53030;
+}
+
+.back-btn {
+    background: #2B6CB0;
+    color: white;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background: #1C4587;
+}
+
+section {
+    margin: 30px 0;
+}
+
+h2 {
+    color: #2B6CB0;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    background: #F7FAFC;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.label {
+    font-weight: bold;
+    color: #4A5568;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.value {
+    color: #2D3748;
+}
+
+.gene-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.gene-table th, .gene-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.gene-table th {
+    background: #2B6CB0;
+    color: white;
+    cursor: pointer;
+}
+
+.gene-table th i {
+    margin-left: 5px;
+}
+
+.status.good {
+    color: #38A169;
+    font-weight: bold;
+}
+
+.status.normal {
+    color: #D69E2E;
+    font-weight: bold;
+}
+
+.status.low {
+    color: #E53E3E;
+    font-weight: bold;
+}
+
+.status i {
+    margin-right: 5px;
+}
+
+.chart-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chart-card {
+    background: #F7FAFC;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.chart-card:hover {
+    transform: scale(1.02);
+}
+
+.chart-card h3 {
+    color: #4A5568;
+    margin-bottom: 10px;
+}
+
+.chart-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+footer {
+    text-align: center;
+    color: #718096;
+    padding-top: 20px;
+    border-top: 1px solid #E2E8F0;
+    margin-top: 30px;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    margin: 5% auto;
+    width: 80%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    color: #4A5568;
+    cursor: pointer;
+}
+
+/* 인쇄 스타일 */
+@media print {
+    .button-group, .back-btn {
+        display: none;
+    }
+    .report-container {
+        box-shadow: none;
+        padding: 0;
+    }
+    .chart-card {
+        page-break-inside: avoid;
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .chart-container {
+        grid-template-columns: 1fr;
+    }
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* 기존 스타일 유지 */
+.status.good { color: #38A169; font-weight: bold; }
+.status.low { color: #E53E3E; font-weight: bold; }
+.gene-table th, .gene-table td { text-align: center; }

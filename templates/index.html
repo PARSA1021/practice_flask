@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유전자 데이터 분석 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        </div>
+        <h1 class="header">유전자 데이터 분석 시스템</h1>
+        
+        <!-- 진행 바 -->
+        <div class="progress-bar">
+            <div class="step active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">사용자 정보</span>
+            </div>
+            <div class="step" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">유전자 데이터</span>
+            </div>
+        </div>
+
+        <!-- 스택 위젯 -->
+        <div id="stacked-widget">
+            <!-- 사용자 정보 입력 섹션 -->
+            <div id="input-section" class="page active">
+                <div class="group-box">
+                    <h2><i class="fas fa-user"></i> 사용자 정보 입력</h2>
+                    <form id="user-info-form" class="form-layout">
+                        <div class="input-group">
+                            <label for="name-input">이름</label>
+                            <input type="text" id="name-input" placeholder="2~5자 (예: 홍길동)" maxlength="5" required>
+                            <span class="validation-message" id="name-feedback"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="birth-date">생년월일</label>
+                            <input type="date" id="birth-date" max="{{ today }}" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="test-date">검사 날짜</label>
+                            <div class="date-input-group">
+                                <input type="date" id="test-date" value="{{ today }}" max="{{ today }}" required>
+                                <button type="button" id="today-btn" class="quick-btn" title="오늘 날짜로 설정">
+                                    <i class="fas fa-calendar-day"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="help-text"><i class="fas fa-info-circle"></i> 이름은 2~5자, 날짜는 오늘까지 입력 가능</p>
+                </div>
+            </div>
+
+            <!-- 유전자 데이터 입력 섹션 -->
+            <div id="gene-data-section" class="page">
+                <div class="group-box">
+                    <h2><i class="fas fa-dna"></i> 유전자 발현량 입력</h2>
+                    <form id="gene-data-form" class="form-layout">
+                        <div class="gene-row">
+                            <label for="b-actin">대조군 (b-actin)</label>
+                            <div class="gene-input-group">
+                                <input type="number" id="b-actin" step="0.01" min="0" max="100" placeholder="0.00" required>
+                                <span class="value-label" id="b-actin-value">0.00</span>
+                                <button type="button" class="reset-btn" data-gene="b-actin" title="초기화">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <span class="info-tooltip" title="기준 유전자 발현량"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                        </div>
+                        <div class="gene-row">
+                            <label for="TIMP3">미백 (TIMP3)</label>
+                            <div class="gene-input-group">
+                                <input type="number" id="TIMP3" step="0.01" min="0" max="100" placeholder="0.00" required>
+                                <span class="value-label" id="TIMP3-value">0.00</span>
+                                <button type="button" class="reset-btn" data-gene="TIMP3" title="초기화">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <span class="info-tooltip" title="피부 톤 개선 관련 유전자"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                        </div>
+                        <div class="gene-row">
+                            <label for="COL10A1">주름 (COL10A1)</label>
+                            <div class="gene-input-group">
+                                <input type="number" id="COL10A1" step="0.01" min="0" max="100" placeholder="0.00" required>
+                                <span class="value-label" id="COL10A1-value">0.00</span>
+                                <button type="button" class="reset-btn" data-gene="COL10A1" title="초기화">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <span class="info-tooltip" title="피부 주름 억제 관련 유전자"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                        </div>
+                        <div class="gene-row">
+                            <label for="FLG">탄력 (FLG)</label>
+                            <div class="gene-input-group">
+                                <input type="number" id="FLG" step="0.01" min="0" max="100" placeholder="0.00" required>
+                                <span class="value-label" id="FLG-value">0.00</span>
+                                <button type="button" class="reset-btn" data-gene="FLG" title="초기화">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <span class="info-tooltip" title="피부 탄력 유지 관련 유전자"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                        </div>
+                        <div class="gene-row">
+                            <label for="AQP3">수분 (AQP3)</label>
+                            <div class="gene-input-group">
+                                <input type="number" id="AQP3" step="0.01" min="0" max="100" placeholder="0.00" required>
+                                <span class="value-label" id="AQP3-value">0.00</span>
+                                <button type="button" class="reset-btn" data-gene="AQP3" title="초기화">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <span class="info-tooltip" title="피부 수분 보유 관련 유전자"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="help-text"><i class="fas fa-info-circle"></i> 0~100 사이, 소수점 둘째 자리까지 입력</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 버튼 컨테이너 -->
+        <div class="button-container">
+            <button id="prev-btn" disabled><i class="fas fa-arrow-left"></i> 이전</button>
+            <button id="next-btn"><i class="fas fa-arrow-right"></i> 다음 (Enter)</button>
+            <button id="save-btn" disabled><i class="fas fa-save"></i> 저장 (Ctrl + Enter)</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

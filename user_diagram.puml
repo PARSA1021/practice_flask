@@ -1,0 +1,81 @@
+@startuml FlaskAppFlowEnhanced
+!theme plain
+skinparam linetype ortho
+skinparam backgroundColor #F5F5F5
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+actor "사용자 (User)" as User #4A90E2
+participant "웹 브라우저" as Browser #6A7F9B
+
+box "Flask 애플리케이션" #FAFAFA
+    participant "메인 애플리케이션\n(Main App)" as App #A2D9CE
+    participant "라우트 및 블루프린트\n(Routes & Blueprint)" as Routes #F2D7AD
+    participant "데이터베이스\n(SQLite)" as Database #D7BDE2
+    participant "로깅 시스템\n(Logging)" as Logger #F1948A
+end box
+
+box "보고서 및 시각화" #F0F3BD
+    participant "차트 생성기\n(Chart Generator)" as ChartGen #82E0AA
+    participant "템플릿 엔진\n(Template Engine)" as Templates #AED6F1
+end box
+
+== 애플리케이션 초기화 ==
+User -> Browser : 웹사이트 접속
+Browser -> App : HTTP 요청
+App -> Routes : 인덱스 페이지 렌더링
+Routes -> Templates : index.html 로드
+Templates --> Browser : 초기 페이지 표시
+
+== 데이터 제출 및 보고서 생성 ==
+User -> Browser : 데이터 입력 및 제출
+Browser -> Routes : 데이터 전송 (/save)
+Routes -> Database : 데이터 검증 및 저장
+activate Database
+    Database -> Logger : 데이터 저장 로깅
+Database --> Routes : 저장 완료
+Routes -> ChartGen : 차트 생성 요청
+    ChartGen -> ChartGen : 레이더/막대 차트 렌더링
+Routes -> Templates : 보고서 페이지 준비
+Templates --> Browser : 보고서 URL 반환
+
+== 보고서 조회 ==
+User -> Browser : 보고서 페이지 요청
+Browser -> Routes : 보고서 조회 (/report)
+Routes -> Database : 사용자 데이터 조회
+Database --> Routes : 데이터 반환
+Routes -> ChartGen : 차트 데이터 요청
+ChartGen -> Templates : 차트 렌더링
+Templates --> Browser : 보고서 페이지 표시
+
+== 보고서 관리 ==
+User -> Browser : 보고서 목록 요청
+Browser -> Routes : 보고서 목록 조회 (/reports)
+Routes -> Database : 모든 보고서 목록 조회
+Database --> Routes : 보고서 목록 반환
+Routes -> Templates : 보고서 목록 페이지 렌더링
+Templates --> Browser : 보고서 목록 표시
+
+== 보고서 삭제 ==
+User -> Browser : 특정 보고서 삭제
+Browser -> Routes : 보고서 삭제 요청 (/delete)
+Routes -> Database : 보고서 데이터 삭제
+activate Database
+    Database -> Logger : 삭제 작업 로깅
+Database --> Routes : 삭제 완료
+Routes -> Browser : 삭제 확인 메시지
+
+== 오류 처리 ==
+alt 데이터베이스 오류
+    Database -> Logger : 오류 로깅
+    Routes -> Templates : error.html 렌더링
+end
+
+== 성능 최적화 ==
+note right of Routes #EEEEEE
+    - 캐싱 메커니즘 적용
+    - 비동기 처리
+    - 효율적인 쿼리 최적화
+end note
+
+@endumls

@@ -1,0 +1,255 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #E9F1F7, #1C4587);
+    margin: 0;
+    padding: 20px;
+    color: #2D3748;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    max-width: 1000px;
+    width: 100%;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.header {
+    text-align: center;
+    color: #1C4587;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* 진행 바 */
+.progress-bar {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 30px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #A0AEC0;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.step.active {
+    color: #2B6CB0;
+}
+
+.step-number {
+    width: 25px;
+    height: 25px;
+    background: #A0AEC0;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.step.active .step-number {
+    background: #2B6CB0;
+}
+
+/* 페이지 및 그룹 박스 */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.group-box {
+    background: #F7FAFC;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.group-box h2 {
+    color: #2B6CB0;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-layout {
+    display: grid;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    color: #4A5568;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 12px;
+    border: 2px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #2B6CB0;
+    outline: none;
+}
+
+.validation-message {
+    font-size: 0.9rem;
+    color: #E53E3E;
+    margin-top: 5px;
+}
+
+/* 날짜 입력 그룹 */
+.date-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.quick-btn {
+    padding: 12px;
+    border: none;
+    background: #E2E8F0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.quick-btn:hover {
+    background: #CBD5E0;
+}
+
+/* 유전자 데이터 입력 */
+.gene-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.gene-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.value-label {
+    width: 50px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.reset-btn {
+    padding: 8px;
+    border: none;
+    background: #E2E8F0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.reset-btn:hover {
+    background: #CBD5E0;
+}
+
+.info-tooltip {
+    color: #718096;
+    cursor: help;
+}
+
+/* 도움말 텍스트 */
+.help-text {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 버튼 컨테이너 */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #2B6CB0;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+button:hover {
+    background: #1C4587;
+}
+
+button:disabled {
+    background: #A0AEC0;
+    cursor: not-allowed;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    .header {
+        font-size: 1.5rem;
+    }
+    .progress-bar {
+        gap: 20px;
+    }
+    .gene-row {
+        grid-template-columns: 1fr;
+    }
+    .button-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    button {
+        width: 100%;
+    }
+}

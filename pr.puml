@@ -1,0 +1,78 @@
+@startuml FlaskAppFlowSimplified
+!theme plain
+skinparam linetype ortho
+skinparam backgroundColor #F5F5F5
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+' 참여자 정의 - 쉽게 이해할 수 있도록 이름을 설정
+actor "사용자" as User #4A90E2
+participant "웹 브라우저" as Browser #6A7F9B
+
+box "Flask 애플리케이션" #FAFAFA
+    participant "앱" as App #A2D9CE
+    participant "페이지 처리" as Routes #F2D7AD
+    participant "데이터베이스" as Database #D7BDE2
+    participant "로그 기록" as Logger #F1948A
+end box
+
+box "보고서 생성" #F0F3BD
+    participant "차트 생성" as ChartGen #82E0AA
+    participant "결과 표시" as Templates #AED6F1
+end box
+
+== 웹사이트 접속 ==
+User -> Browser: 웹사이트 방문
+Browser -> App: 웹 요청
+App -> Routes: 페이지 렌더링 요청
+Routes -> Templates: HTML 페이지 로드
+Templates --> Browser: 웹사이트 표시
+
+== 데이터 입력 및 저장 ==
+User -> Browser: 데이터 입력
+Browser -> Routes: 데이터 저장 요청
+Routes -> Database: 데이터 저장
+Database -> Logger: 저장 로그 기록
+Database --> Routes: 저장 완료
+Routes -> ChartGen: 차트 생성
+Routes -> Templates: 보고서 준비
+Templates --> Browser: 보고서 표시
+
+== 보고서 조회 ==
+User -> Browser: 보고서 조회 요청
+Browser -> Routes: 데이터 요청
+Routes -> Database: 데이터 조회
+Database --> Routes: 데이터 반환
+Routes -> ChartGen: 차트 준비
+ChartGen -> Templates: 보고서 렌더링
+Templates --> Browser: 보고서 표시
+
+== 보고서 목록 조회 ==
+User -> Browser: 보고서 목록 보기
+Browser -> Routes: 목록 조회
+Routes -> Database: 목록 데이터 요청
+Database --> Routes: 목록 반환
+Routes -> Templates: 목록 렌더링
+Templates --> Browser: 목록 표시
+
+== 보고서 삭제 ==
+User -> Browser: 삭제 요청
+Browser -> Routes: 보고서 삭제 요청
+Routes -> Database: 삭제 작업
+Database -> Logger: 삭제 로그 기록
+Database --> Routes: 삭제 완료
+Routes --> Browser: 삭제 확인
+
+== 오류 처리 ==
+alt 오류 발생 시
+    Database -> Logger: 오류 기록
+    Routes -> Templates: 오류 페이지 표시
+    Templates --> Browser: 오류 메시지 표시
+end
+
+== 참고 사항 ==
+note right of Routes #EEEEEE
+    - 캐싱 및 비동기 처리 사용
+end note
+
+@enduml
